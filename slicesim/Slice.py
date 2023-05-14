@@ -1,4 +1,7 @@
-class Slice:
+from .aux import *
+
+
+class Slice():
     def __init__(self, name, ratio,
                  connected_users, user_share, delay_tolerance, qos_class,
                  bandwidth_guaranteed, bandwidth_max, init_capacity,

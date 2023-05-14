@@ -11,7 +11,7 @@ from .utils import format_bps
 
 class Graph:
     def __init__(self, base_stations, clients, xlim, map_limits,
-                 output_dpi=500, scatter_size=15, output_filename='output.png'):
+                 output_dpi=500, scatter_size=15, output_filename='output.png', directory_name=None):
         self.output_filename = output_filename
         self.base_stations = base_stations
         self.clients = clients
@@ -21,6 +21,7 @@ class Graph:
         self.scatter_size = scatter_size
         self.fig = plt.figure(figsize=(16,9))
         self.fig.canvas.set_window_title('Network Slicing Simulation')
+        self.directory_name = directory_name
 
         self.gs = gridspec.GridSpec(4, 3, width_ratios=[6, 3, 3])
 
@@ -39,8 +40,11 @@ class Graph:
         plt.clf()
         self.draw_map()
         self.draw_stats(*stats)
+        # self.draw_slice_data_info()
 
     def draw_map(self):
+        cli_conn = 0
+        cli_unconn = 0
         markers = ['o', 's', 'p', 'P', '*', 'H', 'X', 'D', 'v', '^', '<', '>', '1', '2', '3', '4']
         self.ax = plt.subplot(self.gs[:, 0])
         xlims, ylims = self.map_limits
@@ -63,10 +67,22 @@ class Graph:
             if c.subscribed_slice_index not in legend_indexed and c.base_station is not None:
                 label = c.get_slice().name
                 legend_indexed.append(c.subscribed_slice_index)
-            self.ax.scatter(c.x, c.y,
+
+            if c.is_connected():
+                cli_conn += 1
+                self.ax.scatter(c.x, c.y,
                             color=c.base_station.color if c.base_station is not None else '0.8',
                             label=label, s=15,
                             marker=markers[c.subscribed_slice_index % len(markers)])
+            else:
+                cli_unconn += 1
+                self.ax.scatter(c.x, c.y,
+                            color=['gray'],
+                            label=label, s=15,
+                            marker='d')
+
+        print(f'unconn: {cli_unconn}')
+        print(f'conn: {cli_conn}')
 
         box = self.ax.get_position()
         self.ax.set_position([box.x0 - box.width * 0.05, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
@@ -81,6 +97,7 @@ class Graph:
         self.ax1 = plt.subplot(self.gs[0, 1])
         self.ax1.plot(vals)
         self.ax1.set_xlim(self.xlim)
+        self.ax1.set(xlabel='simulation time [s]', ylabel='Admitted UEs ratio')
         locs = self.ax1.get_xticks()
         locs[0] = self.xlim[0]
         locs[-1] = self.xlim[1]
@@ -91,6 +108,7 @@ class Graph:
         self.ax2 = plt.subplot(self.gs[1, 1])
         self.ax2.plot(vals1)
         self.ax2.set_xlim(self.xlim)
+        self.ax2.set(xlabel='simulation time [s]', ylabel='Total BW usage')
         self.ax2.set_xticks(locs)
         self.ax2.yaxis.set_major_formatter(FuncFormatter(format_bps))
         self.ax2.use_sticky_edges = False
@@ -98,6 +116,7 @@ class Graph:
 
         self.ax3 = plt.subplot(self.gs[2, 1])
         self.ax3.plot(vals2)
+        self.ax3.set(xlabel='simulation time [s]', ylabel='BW usage ratio over slices')
         self.ax3.set_xlim(self.xlim)
         self.ax3.set_xticks(locs)
         self.ax3.use_sticky_edges = False
@@ -160,6 +179,38 @@ class Graph:
         self.ax8.table(cellText=cell_text, rowLabels=row_labels, colWidths=[0.35, 0.2], loc='center right')
 
         plt.tight_layout()
+
+    def draw_slice_data_info(self, per_slice_stats):
+        """
+
+        :param connected_ues:
+        :param cac_reject_data:
+        :param total_bandwidth_usage:
+        :return:
+        """
+        data_dict = dict()
+        total_bandwidth_usage = per_slice_stats.get('per_slice_load_ratio')
+        for point in total_bandwidth_usage:
+            for slice in point:
+                try:
+                    data_dict[slice].append(point[slice]['used_capacity'] / point[slice]['capacity'])
+                except KeyError:
+                    data_dict.update({slice: [point[slice]['used_capacity'] / point[slice]['capacity']]})
+        for data in data_dict:
+            s = [i for i in range(0, 20)]
+            t = data_dict[data]
+            fig, ax = plt.subplots()
+            ax.plot(s, t)
+
+            ax.set(xlabel='time (s)', ylabel='pressure',
+                   title=data)
+            ax.grid()
+
+            plt.show()
+            fig.savefig(f'{self.directory_name}/{data}_pressure', dpi=1000)
+
+    def plot_data(self, d):
+        pass
 
     def save_fig(self):
         self.fig.savefig(self.output_filename, dpi=1000)

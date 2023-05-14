@@ -1,3 +1,4 @@
+from datetime import *
 import math
 import os
 import random
@@ -54,6 +55,7 @@ def get_random_slice_index(vals):
         i += 1
     return i
 
+
 if len(sys.argv) != 2:
     print('Please type an input file.')
     print('python -m slicesim <input-file>')
@@ -67,7 +69,6 @@ try:
 except FileNotFoundError:
     print('File Not Found:', CONF_FILENAME)
     exit(0)
-
 random.seed()
 env = simpy.Environment()
 
@@ -79,7 +80,11 @@ BASE_STATIONS = data['base_stations']
 CLIENTS = data['clients']
 
 if SETTINGS['logging']:
-    sys.stdout = open(SETTINGS['log_file'],'wt')
+    _log_file = datetime.now().strftime('%Y_%m_%d_%H%M%S.log')
+    try:
+        sys.stdout = open(f'logs/{_log_file}', 'xt')
+    except OSError as e:
+        os.chmod(f'logs/{_log_file}', mode=755)
 else:
     sys.stdout = open(os.devnull, 'w')
 
@@ -103,7 +108,10 @@ for name, s in SLICES_INFO.items():
     usage_patterns[name] = Distributor(name, get_dist(s['usage_pattern']['distribution']), *s['usage_pattern']['params'])
 
 base_stations = []
+global_slices = []
 i = 0
+
+
 for b in BASE_STATIONS:
     slices = []
     ratios = b['ratios']
@@ -117,6 +125,10 @@ for b in BASE_STATIONS:
                   s['bandwidth_max'], s_cap, usage_patterns[name])
         s.capacity = simpy.Container(env, init=s_cap, capacity=s_cap)
         slices.append(s)
+
+        #TODO: glob
+        global_slices.append(s)
+
     base_station = BaseStation(i, Coverage((b['x'], b['y']), b['coverage']), capacity, slices)
     base_stations.append(base_station)
     i += 1
@@ -126,7 +138,9 @@ usage_freq_pattern = Distributor(f'ufp', get_dist(ufp['distribution']), *ufp['pa
 
 x_vals = SETTINGS['statistics_params']['x']
 y_vals = SETTINGS['statistics_params']['y']
-stats = Stats(env, base_stations, None, ((x_vals['min'], x_vals['max']), (y_vals['min'], y_vals['max'])))
+stats = Stats(env, base_stations, None,
+              ((x_vals['min'], x_vals['max']), (y_vals['min'], y_vals['max'])),
+              slices=global_slices)
 
 clients = []
 for i in range(NUM_CLIENTS):
@@ -149,7 +163,7 @@ stats.clients = clients
 env.process(stats.collect())
 
 env.run(until=int(SETTINGS['simulation_time']))
-
+sys.stdout = sys.__stdout__
 for client in clients:
     print(client)
     print(f'\tTotal connected time: {client.total_connected_time:>5}')
@@ -162,6 +176,13 @@ for client in clients:
 print(stats.get_stats())
 
 if SETTINGS['plotting_params']['plotting']:
+    directory_name = f"plots/{datetime.now().strftime('%Y_%m_%d_%H%M%S')}"
+    try:
+        os.mkdir(directory_name)
+    except OSError as error:
+        print(error)
+
+    _output_filename = f"{directory_name}/main_plot"
     xlim_left = int(SETTINGS['simulation_time'] * SETTINGS['statistics_params']['warmup_ratio'])
     xlim_right = int(SETTINGS['simulation_time'] * (1 - SETTINGS['statistics_params']['cooldown_ratio'])) + 1
     
@@ -169,8 +190,9 @@ if SETTINGS['plotting_params']['plotting']:
                   ((x_vals['min'], x_vals['max']), (y_vals['min'], y_vals['max'])),
                   output_dpi=SETTINGS['plotting_params']['plot_file_dpi'],
                   scatter_size=SETTINGS['plotting_params']['scatter_size'],
-                  output_filename=SETTINGS['plotting_params']['plot_file'])
+                  output_filename=_output_filename, directory_name=directory_name)
     graph.draw_all(*stats.get_stats())
+    graph.draw_slice_data_info(stats.get_per_slice_stats())
     if SETTINGS['plotting_params']['plot_save']:
         graph.save_fig()
     if SETTINGS['plotting_params']['plot_show']:

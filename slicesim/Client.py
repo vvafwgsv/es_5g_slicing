@@ -54,13 +54,13 @@ class Client:
                     self.disconnect()
                 else:
                     self.generate_usage_and_connect()
-        
+
         yield self.env.timeout(0.25)
 
         # .25: Stats
-        
+
         yield self.env.timeout(0.25)
-        
+
         # .50: Release
         # Base station check skipped as it's already implied by self.connected
         if self.connected and self.last_usage > 0:
@@ -69,11 +69,12 @@ class Client:
                 self.disconnect()
 
         yield self.env.timeout(0.25)
-        
+
         # .75: Move
         # Move the client
         x, y = self.mobility_pattern.generate_movement()
         self.x += x
+
         self.y += y
 
         if self.base_station is not None:
@@ -82,16 +83,16 @@ class Client:
                 self.assign_closest_base_station(exclude=[self.base_station.pk])
         else:
             self.assign_closest_base_station()
-        
+
         yield self.env.timeout(0.25)
-        
+
         yield self.env.process(self.iter())
 
     def get_slice(self):
         if self.base_station is None:
             return None
         return self.base_station.slices[self.subscribed_slice_index]
-    
+
     def generate_usage_and_connect(self):
         if self.usage_freq < random.random() and self.get_slice() is not None:
             # Generate a new usage
@@ -99,6 +100,9 @@ class Client:
             self.total_request_count += 1
             self.connect()
             print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] requests {self.usage_remaining} usage.')
+
+    def is_connected(self):
+        return self.connected
 
     def connect(self):
         s = self.get_slice()
@@ -109,7 +113,8 @@ class Client:
         if s.is_avaliable():
             s.connected_users += 1
             self.connected = True
-            print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] connected to slice={self.get_slice()} @ {self.base_station}')
+            print(
+                f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] connected to slice={self.get_slice()} @ {self.base_station}')
             return True
         else:
             self.assign_closest_base_station(exclude=[self.base_station.pk])
@@ -120,18 +125,21 @@ class Client:
                 # block
                 self.stat_collector.incr_block_count(self)
             else:
-                pass # uncovered
-            print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] connection refused to slice={self.get_slice()} @ {self.base_station}')
+                pass  # uncovered
+            print(
+                f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] connection refused to slice={self.get_slice()} @ {self.base_station}')
             return False
 
     def disconnect(self):
         if self.connected == False:
-            print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] is already disconnected from slice={self.get_slice()} @ {self.base_station}')
+            print(
+                f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] is already disconnected from slice={self.get_slice()} @ {self.base_station}')
         else:
             slice = self.get_slice()
             slice.connected_users -= 1
             self.connected = False
-            print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] disconnected from slice={self.get_slice()} @ {self.base_station}')
+            print(
+                f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] disconnected from slice={self.get_slice()} @ {self.base_station}')
         return not self.connected
 
     def start_consume(self):
@@ -145,7 +153,7 @@ class Client:
     def release_consume(self):
         s = self.get_slice()
         # Put the resource back
-        if self.last_usage > 0: # note: s.capacity.put cannot take 0
+        if self.last_usage > 0:  # note: s.capacity.put cannot take 0
             s.capacity.put(self.last_usage)
             print(f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] puts back {self.last_usage} usage.')
             self.total_consume_time += 1
@@ -156,13 +164,13 @@ class Client:
     # Check closest base_stations of a client and assign the closest non-excluded avaliable base_station to the client.
     def assign_closest_base_station(self, exclude=None):
         updated_list = []
-        for d,b in self.closest_base_stations:
+        for d, b in self.closest_base_stations:
             if exclude is not None and b.pk in exclude:
                 continue
             d = distance((self.x, self.y), (b.coverage.center[0], b.coverage.center[1]))
-            updated_list.append((d,b))
+            updated_list.append((d, b))
         updated_list.sort(key=operator.itemgetter(0))
-        for d,b in updated_list:
+        for d, b in updated_list:
             if d <= b.coverage.radius:
                 self.base_station = b
                 print(f'[{int(self.env.now)}] Client_{self.pk} freshly assigned to {self.base_station}')
