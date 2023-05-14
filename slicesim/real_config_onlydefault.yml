@@ -1,0 +1,176 @@
+settings:
+  simulation_time: 5
+  num_clients: 1000
+  limit_closest_base_stations: 3
+  statistics_params:
+    warmup_ratio: 0.05
+    cooldown_ratio: 0.05
+    x:
+      min: 0
+      max: 300
+    y:
+      min: 0
+      max: 300
+  logging: True
+  log_file: output.txt
+  plotting: True
+  plot_save: True
+  plot_show: True
+  plot_file: output.png
+  plotting_params:
+    plotting: True # plot the statistics after execution
+    plot_save: True # save plot as image
+    plot_show: True # show plot after execution
+    plot_file: output.png # name of the plot image
+    plot_file_dpi: 1000 # dots per inch for plot image
+    scatter_size: 15
+slices:
+  best_effort:
+    delay_tolerance: 10000
+    qos_class: 2
+    bandwidth_guaranteed: 10
+    bandwidth_max: 10000000 #100Tb/s
+    client_weight: 1
+    threshold: 0.8
+    usage_pattern:
+      distribution: randint # distribution name
+      params: # distribution parameters
+        - 40000000 # min value for this example
+        - 80000000 # max value for this example
+#  data:
+#    delay_tolerance: 2000
+#    qos_class: 4
+#    bandwidth_guaranteed: 1000
+#    bandwidth_max: 50000000
+#    client_weight: 0.5
+#    threshold: 0.87
+#    usage_pattern:
+#      distribution: randint # distribution name
+#      params: # distribution parameters
+#        - 4000000 # min value for this example
+#        - 800000000 # max value for this example
+base_stations:
+####### TMOBILE START #######
+  # Plac Mariacki 5; T-Mobile ID: 51214
+  - x: 170
+    y: 170
+    coverage: 60
+    capacity_bandwidth: 100000000 #1Tb/s
+    ratios:
+      best_effort: 1
+#      best_effort: 0.1
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.27
+#      orange_mMTC: 0.05
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.4
+#      tmobile_eMBB_p: 0.05
+#      tmobile_voice: 0.05
+  # Senacka 1, 470; T-Mobile ID: 51246
+  - x: 130
+    y: 170
+    coverage: 90
+    capacity_bandwidth: 10000000 #1Tb/s
+    ratios:
+      best_effort: 1
+#      best_effort: 0.1
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.27
+#      orange_mMTC: 0.05
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.4
+#      tmobile_eMBB_p: 0.05
+#      tmobile_voice: 0.05
+####### ORANGE START #######
+  # Plac Szczepański 6, 550; Orange ID: 1554
+  - x: 50
+    y: 50
+    coverage: 60
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Floriańska 37, 563; Orange ID: 4199
+  - x: 350
+    y: 70
+    coverage: 50
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Szewska 21, 329; Orange ID: 5332
+  - x: 0
+    y: 110
+    coverage: 50
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Rynek Główny 39, 169; Orange ID: 29904
+  - x: 150
+    y: 130
+    coverage: 100
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Rynek Główny 30, 356; Orange ID: 29892
+  - x: 50
+    y: 150
+    coverage: 70
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Rynek Główny 15, 412; Orange ID: 1875
+  - x: 250
+    y: 200
+    coverage: 100
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Franciszkańska 1, 402; Orange ID: 29777
+  - x: 70
+    y: 250
+    coverage: 50
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+  # Grodzka 40, 599; Orange ID: 5333
+  - x: 170
+    y: 350
+    coverage: 100
+    capacity_bandwidth: 1000000000 #1Tb/s
+    ratios:
+      best_effort: 1
+mobility_patterns:
+  normal_btw_0_1000:
+    distribution: normal
+    params:
+      - 0
+      - 1
+    client_weight: 0.5
+  basic:
+    distribution: randint
+    params:
+      - -1
+      - 1
+    client_weight: 0.5
+clients:
+  location:
+    x:
+      distribution: normal
+      params:
+        - 0
+        - 300
+    y:
+      distribution: normal
+      params:
+        - 0
+        - 300
+  usage:
+    distribution: randint
+    params:
+      -
+      - 100000
+  usage_frequency:
+    distribution: randint
+    params:
+      - 0
+      - 100000
+    divide_scale: 1000000

@@ -1,0 +1,372 @@
+settings:
+  simulation_time: 20
+  num_clients: 3000
+  limit_closest_base_stations: 5
+  statistics_params:
+    warmup_ratio: 0.05
+    cooldown_ratio: 0.05
+    x:
+      min: 0
+      max: 300
+    y:
+      min: 0
+      max: 300
+  logging: False
+  log_file: output.txt
+  plotting_params:
+    plotting: True
+    plot_save: True
+    plot_show: False
+    plot_file: output.png
+    plot_file_dpi: 1000
+    scatter_size: 15
+slices:
+  orange_eMBB:
+    delay_tolerance: 10
+    qos_class: 5
+    bandwidth_guaranteed: 0
+    bandwidth_max: 100000000
+    client_weight: 0.39
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 4000000
+        - 800000000
+  orange_mMTC:
+    delay_tolerance: 10
+    qos_class: 2
+    bandwidth_guaranteed: 1000000
+    bandwidth_max: 10000000
+    client_weight: 0.10
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 800000
+        - 8000000
+  orange_URLLC:
+    delay_tolerance: 10
+    qos_class: 1
+    bandwidth_guaranteed: 5000000
+    bandwidth_max: 10000000
+    client_weight: 0.02
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 80000
+        - 8000000
+  orange_voice:
+    delay_tolerance: 10
+    qos_class: 3
+    bandwidth_guaranteed: 500000
+    bandwidth_max: 1000000
+    client_weight: 0.06
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 4000000
+        - 8000000
+  tmobile_eMBB:
+    delay_tolerance: 10
+    qos_class: 5
+    bandwidth_guaranteed: 0
+    bandwidth_max: 100000000
+    client_weight: 0.30
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 2000000
+        - 600000000
+  tmobile_eMBB_p:
+    delay_tolerance: 10
+    qos_class: 4
+    bandwidth_guaranteed: 100000000
+    bandwidth_max: 1000000000
+    client_weight: 0.05
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 10000000
+        - 1000000000
+  tmobile_voice:
+    delay_tolerance: 10
+    qos_class: 3
+    bandwidth_guaranteed: 500000
+    bandwidth_max: 1000000
+    client_weight: 0.08
+    threshold: 0
+    usage_pattern:
+      distribution: randint
+      params:
+        - 4000000 # 4Mb/s
+        - 8000000 # 8Mb/s
+base_stations:
+####### TMOBILE START #######
+  # Plac Mariacki 5; T-Mobile ID: 51214
+  - capacity_bandwidth: 20000000000
+    coverage: 60
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.37
+      orange_mMTC: 0.05
+      orange_voice: 0.06
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
+      tmobile_voice: 0.05
+    x: 170
+    y: 170
+
+  # Senacka 1, 470; T-Mobile ID: 51246
+  - x: 130
+    y: 170
+    coverage: 90
+    capacity_bandwidth: 30000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.45
+      orange_mMTC: 0.05
+      orange_voice: 0.04
+      tmobile_eMBB: 0.36
+      tmobile_eMBB_p: 0.05
+      tmobile_voice: 0.04
+
+####### ORANGE START #######
+  # Plac Szczepański 6, 550; Orange ID: 1554
+  - x: 50
+    y: 50
+    coverage: 60
+    capacity_bandwidth: 25000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.48
+      orange_mMTC: 0.06
+      orange_voice: 0.03
+      tmobile_eMBB: 0.36
+      tmobile_eMBB_p: 0.01
+      tmobile_voice: 0.05
+
+  # Floriańska 37, 563; Orange ID: 4199
+  - x: 350
+    y: 70
+    coverage: 50
+    capacity_bandwidth: 30000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.36
+      orange_mMTC: 0.04
+      orange_voice: 0.09
+      tmobile_eMBB: 0.3
+      tmobile_eMBB_p: 0.12
+      tmobile_voice: 0.08
+
+  # Szewska 21, 329; Orange ID: 5332
+  - x: 0
+    y: 110
+    coverage: 50
+    capacity_bandwidth: 80000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.47
+      orange_mMTC: 0.03
+      orange_voice: 0.07
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.03
+      tmobile_voice: 0.04
+
+ # Rynek Główny 39, 169; Orange ID: 29904
+  - x: 150
+    y: 130
+    coverage: 100
+    capacity_bandwidth: 35000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.4
+      orange_mMTC: 0.07
+      orange_voice: 0.06
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.06
+      tmobile_voice: 0.05
+
+  # Rynek Główny 30, 356; Orange ID: 29892
+  - x: 50
+    y: 150
+    coverage: 70
+    capacity_bandwidth: 35000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.4
+      orange_mMTC: 0.07
+      orange_voice: 0.06
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.06
+      tmobile_voice: 0.05
+
+  # Rynek Główny 15, 412; Orange ID: 1875
+  - x: 250
+    y: 200
+    coverage: 100
+    capacity_bandwidth: 40000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.4
+      orange_mMTC: 0.07
+      orange_voice: 0.06
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.06
+      tmobile_voice: 0.05
+
+  # Franciszkańska 1, 402; Orange ID: 29777
+  - x: 70
+    y: 250
+    coverage: 50
+    capacity_bandwidth: 75000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.4
+      orange_mMTC: 0.07
+      orange_voice: 0.06
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.06
+      tmobile_voice: 0.05
+
+  # Grodzka 40, 599; Orange ID: 5333
+  - x: 170
+    y: 350
+    coverage: 100
+    capacity_bandwidth: 50000000000
+    ratios:
+      orange_URLLC: 0.01
+      orange_eMBB: 0.4
+      orange_mMTC: 0.07
+      orange_voice: 0.06
+      tmobile_eMBB: 0.35
+      tmobile_eMBB_p: 0.06
+      tmobile_voice: 0.05
+    x: 1066
+    y: 94
+#  - capacity_bandwidth: 100000000000
+#    coverage: 464
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 1864
+#    y: 962
+#  - capacity_bandwidth: 30000000000
+#    coverage: 302
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 1442
+#    y: 476
+#  - capacity_bandwidth: 35000000000
+#    coverage: 330
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 1862
+#    y: 296
+#  - capacity_bandwidth: 20000000000
+#    coverage: 242
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 1538
+#    y: 26
+#  - capacity_bandwidth: 10000000000
+#    coverage: 152
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 1448
+#    y: 1456
+#  - capacity_bandwidth: 50
+#    coverage: 368
+#    ratios:
+#      orange_URLLC: 0.01
+#      orange_eMBB: 0.4
+#      orange_mMTC: 0.07
+#      orange_voice: 0.06
+#      tmobile_eMBB: 0.35
+#      tmobile_eMBB_p: 0.06
+#      tmobile_voice: 0.05
+#    x: 44
+#    y: 1916
+mobility_patterns:
+  car:
+    distribution: normal
+    params:
+      - 0
+      - 7
+    client_weight: 0.10
+  walk:
+    distribution: randint
+    params:
+      - -1
+      - 1
+    client_weight: 0.40
+  stationary:
+    distribution: normal
+    params:
+      - 0
+      - 0.1
+    client_weight: 0.20
+  tram:
+    distribution: randint
+    params:
+      - -4
+      - 4
+    client_weight: 0.10
+  slackperson:
+    distribution: randint
+    params:
+      - 0
+      - 1
+    client_weight: 0.20
+clients:
+  location:
+    x:
+      distribution: randint
+      params:
+        - 0
+        - 300
+    y:
+      distribution: randint
+      params:
+        - 0
+        - 300
+  usage_frequency:
+    distribution: randint
+    params:
+      - 0
+      - 100000
+    divide_scale: 1000000
