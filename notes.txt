@@ -1,3 +1,4 @@
 1. plot z 11.55:
     - wyniki obciazenia slicow są poszarpane -> zmienić client ratio dla slicow,
       w ktorych wystepuja wykresy piłowe: [?]
+        - nadal, zmiana ratio w gnb: [?]

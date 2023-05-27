@@ -173,7 +173,7 @@ for client in clients:
     print(f'\tTotal usage: {client.total_usage:>5}')
     print()
 
-print(stats.get_stats())
+# print(stats.get_stats())
 
 if SETTINGS['plotting_params']['plotting']:
     directory_name = f"plots/{datetime.now().strftime('%Y_%m_%d_%H%M%S')}"
@@ -185,12 +185,14 @@ if SETTINGS['plotting_params']['plotting']:
     _output_filename = f"{directory_name}/main_plot"
     xlim_left = int(SETTINGS['simulation_time'] * SETTINGS['statistics_params']['warmup_ratio'])
     xlim_right = int(SETTINGS['simulation_time'] * (1 - SETTINGS['statistics_params']['cooldown_ratio'])) + 1
-    
+
     graph = Graph(base_stations, clients, (xlim_left, xlim_right),
                   ((x_vals['min'], x_vals['max']), (y_vals['min'], y_vals['max'])),
                   output_dpi=SETTINGS['plotting_params']['plot_file_dpi'],
                   scatter_size=SETTINGS['plotting_params']['scatter_size'],
-                  output_filename=_output_filename, directory_name=directory_name)
+                  output_filename=_output_filename, directory_name=directory_name, log_filename=_log_file,
+                  sim_time=SETTINGS['simulation_time'])
+
     graph.draw_all(*stats.get_stats())
     graph.draw_slice_data_info(stats.get_per_slice_stats())
     if SETTINGS['plotting_params']['plot_save']:

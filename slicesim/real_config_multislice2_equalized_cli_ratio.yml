@@ -1,5 +1,5 @@
 settings:
-  simulation_time: 20
+  simulation_time: 500
   num_clients: 3000
   limit_closest_base_stations: 5
   statistics_params:
@@ -11,7 +11,7 @@ settings:
     y:
       min: 0
       max: 300
-  logging: False
+  logging: True
   log_file: output.txt
   plotting_params:
     plotting: True
@@ -34,36 +34,34 @@ slices:
         - 4000000
         - 800000000
   orange_mMTC:
-    # fluktuacje
     delay_tolerance: 10
     qos_class: 2
     bandwidth_guaranteed: 1000000
-    bandwidth_max: 100000000
+    bandwidth_max: 10000000
     client_weight: 0.10
     threshold: 0
     usage_pattern:
       distribution: randint
       params:
-        - 4000000
+        - 800000
         - 8000000
   orange_URLLC:
-    # fluktuacje
     delay_tolerance: 10
     qos_class: 1
-    bandwidth_guaranteed: 50000000
-    bandwidth_max: 10000000000
+    bandwidth_guaranteed: 5000000
+    bandwidth_max: 10000000
     client_weight: 0.02
     threshold: 0
     usage_pattern:
       distribution: randint
       params:
-        - 4000000
+        - 800
         - 8000000
   orange_voice:
     delay_tolerance: 10
     qos_class: 3
-    bandwidth_guaranteed: 5000000
-    bandwidth_max: 100000000
+    bandwidth_guaranteed: 500000
+    bandwidth_max: 1000000
     client_weight: 0.06
     threshold: 0
     usage_pattern:
@@ -105,18 +103,105 @@ slices:
     usage_pattern:
       distribution: randint
       params:
-        - 4000000 # 4Mb/s
-        - 8000000 # 8Mb/s
+        - 4000000
+        - 8000000
+#slices:
+#  orange_eMBB:
+#    delay_tolerance: 10
+#    qos_class: 5
+#    bandwidth_guaranteed: 500000
+#    bandwidth_max: 1000000000
+#    client_weight: 0.2
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 400000
+#        - 10000000
+#  orange_mMTC:
+#    #fluktuacje
+#    delay_tolerance: 10
+#    qos_class: 2
+#    bandwidth_guaranteed: 1000000
+#    bandwidth_max: 10000000000
+#    client_weight: 0.2
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 4000000
+#        - 8000000
+#  orange_URLLC:
+#    #fluktuacje
+#    delay_tolerance: 10
+#    qos_class: 1
+#    bandwidth_guaranteed: 5000000
+#    bandwidth_max: 100000000
+#    client_weight: 0.2
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 10000
+#        - 900000
+#  orange_voice:
+#    delay_tolerance: 10
+#    qos_class: 3
+#    bandwidth_guaranteed: 500000
+#    bandwidth_max: 1000000000
+#    client_weight: 0.2
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 400000
+#        - 700000
+#  tmobile_eMBB:
+#    delay_tolerance: 10
+#    qos_class: 5
+#    bandwidth_guaranteed: 10000000
+#    bandwidth_max: 10000000000
+#    client_weight: 0.1
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 20000000
+#        - 60000000
+#  tmobile_eMBB_p:
+#    delay_tolerance: 10
+#    qos_class: 4
+#    bandwidth_guaranteed: 100000000
+#    bandwidth_max: 1000000000
+#    client_weight: 0.05
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 10000000
+#        - 1000000000
+#  tmobile_voice:
+#    delay_tolerance: 10
+#    qos_class: 3
+#    bandwidth_guaranteed: 500000
+#    bandwidth_max: 1000000
+#    client_weight: 0.05
+#    threshold: 0
+#    usage_pattern:
+#      distribution: randint
+#      params:
+#        - 4000000 # 4Mb/s
+#        - 8000000 # 8Mb/s
 base_stations:
 ####### TMOBILE START #######
   # Plac Mariacki 5; T-Mobile ID: 51214
   - capacity_bandwidth: 20000000000
     coverage: 60
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.37
-      orange_mMTC: 0.05
-      orange_voice: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
       tmobile_eMBB: 0.4
       tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
@@ -129,13 +214,13 @@ base_stations:
     coverage: 90
     capacity_bandwidth: 30000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.45
-      orange_mMTC: 0.05
-      orange_voice: 0.04
-      tmobile_eMBB: 0.36
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
       tmobile_eMBB_p: 0.05
-      tmobile_voice: 0.04
+      tmobile_voice: 0.05
 
 ####### ORANGE START #######
   # Plac Szczepański 6, 550; Orange ID: 1554
@@ -144,12 +229,12 @@ base_stations:
     coverage: 60
     capacity_bandwidth: 25000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.48
-      orange_mMTC: 0.06
-      orange_voice: 0.03
-      tmobile_eMBB: 0.36
-      tmobile_eMBB_p: 0.01
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
 
   # Floriańska 37, 563; Orange ID: 4199
@@ -158,13 +243,13 @@ base_stations:
     coverage: 50
     capacity_bandwidth: 30000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.36
-      orange_mMTC: 0.04
-      orange_voice: 0.09
-      tmobile_eMBB: 0.3
-      tmobile_eMBB_p: 0.12
-      tmobile_voice: 0.08
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
+      tmobile_voice: 0.05
 
   # Szewska 21, 329; Orange ID: 5332
   - x: 0
@@ -172,13 +257,13 @@ base_stations:
     coverage: 50
     capacity_bandwidth: 80000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.47
-      orange_mMTC: 0.03
-      orange_voice: 0.07
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.03
-      tmobile_voice: 0.04
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
+      tmobile_voice: 0.05
 
  # Rynek Główny 39, 169; Orange ID: 29904
   - x: 150
@@ -186,12 +271,12 @@ base_stations:
     coverage: 100
     capacity_bandwidth: 35000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.4
-      orange_mMTC: 0.07
-      orange_voice: 0.06
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
 
   # Rynek Główny 30, 356; Orange ID: 29892
@@ -200,12 +285,12 @@ base_stations:
     coverage: 70
     capacity_bandwidth: 35000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.4
-      orange_mMTC: 0.07
-      orange_voice: 0.06
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
 
   # Rynek Główny 15, 412; Orange ID: 1875
@@ -214,12 +299,12 @@ base_stations:
     coverage: 100
     capacity_bandwidth: 40000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.4
-      orange_mMTC: 0.07
-      orange_voice: 0.06
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
 
   # Franciszkańska 1, 402; Orange ID: 29777
@@ -228,12 +313,12 @@ base_stations:
     coverage: 50
     capacity_bandwidth: 75000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.4
-      orange_mMTC: 0.07
-      orange_voice: 0.06
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
 
   # Grodzka 40, 599; Orange ID: 5333
@@ -242,15 +327,13 @@ base_stations:
     coverage: 100
     capacity_bandwidth: 50000000000
     ratios:
-      orange_URLLC: 0.01
-      orange_eMBB: 0.4
-      orange_mMTC: 0.07
-      orange_voice: 0.06
-      tmobile_eMBB: 0.35
-      tmobile_eMBB_p: 0.06
+      orange_URLLC: 0.11
+      orange_eMBB: 0.17
+      orange_mMTC: 0.10
+      orange_voice: 0.11
+      tmobile_eMBB: 0.4
+      tmobile_eMBB_p: 0.05
       tmobile_voice: 0.05
-    x: 1066
-    y: 94
 #  - capacity_bandwidth: 100000000000
 #    coverage: 464
 #    ratios:

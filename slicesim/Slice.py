@@ -17,12 +17,19 @@ class Slice():
         self.init_capacity = init_capacity
         self.capacity = 0
         self.usage_pattern = usage_pattern
-    
+        self.ue_cac = 0
+
     def get_consumable_share(self):
         if self.connected_users <= 0:
             return min(self.init_capacity, self.bandwidth_max)
         else:
             return min(self.init_capacity/self.connected_users, self.bandwidth_max)
+
+    def increment_ue_cac(self):
+        self.ue_cac += 1
+
+    def clear_ue_cac(self):
+        self.ue_cac = 0
 
     def is_avaliable(self):
         real_cap = min(self.init_capacity, self.bandwidth_max)

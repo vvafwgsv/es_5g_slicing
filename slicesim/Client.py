@@ -117,6 +117,8 @@ class Client:
                 f'[{int(self.env.now)}] Client_{self.pk} [{self.x}, {self.y}] connected to slice={self.get_slice()} @ {self.base_station}')
             return True
         else:
+            self.get_slice().increment_ue_cac()
+
             self.assign_closest_base_station(exclude=[self.base_station.pk])
             if self.base_station is not None and self.get_slice().is_avaliable():
                 # handover
@@ -124,6 +126,8 @@ class Client:
             elif self.base_station is not None:
                 # block
                 self.stat_collector.incr_block_count(self)
+                self.get_slice().increment_ue_cac()
+
             else:
                 pass  # uncovered
             print(
